@@ -140,6 +140,10 @@ button {
 }
 
 .pageHeader {
+  margin: 2rem 0;
+}
+
+.pageHeader p {
   font-size: 2rem;
   font-weight: 800;
 }
