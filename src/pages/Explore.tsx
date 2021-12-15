@@ -21,7 +21,7 @@ const Explore: FC = () => {
             />
             <p className="exploreCategoryName mt-2">Places for rent</p>
           </Link>
-          <Link to="/category/sell">
+          <Link to="/category/sale">
             <img
               src={sellCategoryImage}
               alt="Sell"

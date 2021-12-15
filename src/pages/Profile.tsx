@@ -1,5 +1,5 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ChangeEvent, FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
