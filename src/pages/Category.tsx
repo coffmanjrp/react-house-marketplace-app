@@ -11,7 +11,7 @@ import {
   startAfter,
 } from 'firebase/firestore';
 import { db } from 'firebase.config';
-import { Spinner } from 'components';
+import { ListingItem, Spinner } from 'components';
 
 const Category: FC = () => {
   const [listings, setListings] = useState<any[] | null>(null);
@@ -70,7 +70,13 @@ const Category: FC = () => {
           <main>
             <ul className="categoryListings">
               {listings.map((listing) => (
-                <h3 key={listing.id}>{listing.data.name}</h3>
+                <ListingItem
+                  {...{
+                    key: listing.id,
+                    id: listing.id,
+                    listing: listing.data,
+                  }}
+                />
               ))}
             </ul>
           </main>
