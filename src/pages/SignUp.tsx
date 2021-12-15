@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { setDoc, doc, serverTimestamp, FieldValue } from 'firebase/firestore';
 import { app, db } from 'firebase.config';
+import { OAuth } from 'components';
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg';
 import visibilityIcon from 'assets/svg/visibilityIcon.svg';
 
@@ -112,7 +113,7 @@ const SignUp: FC = () => {
             </button>
           </div>
         </form>
-        {/*  Google OAuth */}
+        <OAuth />
         <Link to="/sign-in" className="registerLink">
           Sign In Instead
         </Link>
