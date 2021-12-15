@@ -3,14 +3,14 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyAAyce34yZBuLWB0Dxls7ITVTSjSW5jyL4',
-  authDomain: 'react-house-marketplace-app.firebaseapp.com',
-  projectId: 'react-house-marketplace-app',
-  storageBucket: 'react-house-marketplace-app.appspot.com',
-  messagingSenderId: '937695450716',
-  appId: '1:937695450716:web:c3f874af6874ad2c66b899',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
-export const db = getFirestore();
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);

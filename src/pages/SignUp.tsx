@@ -1,7 +1,14 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import { setDoc, doc, serverTimestamp, FieldValue } from 'firebase/firestore';
+import { app, db } from 'firebase.config';
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg';
-import visibilityIcon from '../assets/svg/visibilityIcon.svg';
+import visibilityIcon from 'assets/svg/visibilityIcon.svg';
 
 const SignUp: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,13 +27,50 @@ const SignUp: FC = () => {
     }));
   };
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth(app);
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      updateProfile(auth.currentUser!, {
+        displayName: name,
+      });
+
+      const formDataCopy: {
+        name: string;
+        email: string;
+        password?: string;
+        timestamp?: FieldValue;
+      } = {
+        ...formData,
+      };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, 'users', user.uid), formDataCopy);
+
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="pageContainer">
         <header className="pageHeader">
           <p>Welcome!</p>
         </header>
-        <form>
+        <form onSubmit={onSubmit}>
           <input
             type="text"
             className="nameInput"
@@ -62,7 +106,7 @@ const SignUp: FC = () => {
           </div>
           <div className="signUpBar">
             <p className="signUpText">Sign Up</p>
-            <button type="button" className="signUpButton">
+            <button type="submit" className="signUpButton">
               <ArrowRightIcon fill="#fff" width="34px" height="34px" />
             </button>
           </div>

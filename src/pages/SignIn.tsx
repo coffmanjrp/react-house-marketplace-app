@@ -56,7 +56,7 @@ const SignIn: FC = () => {
           </Link>
           <div className="signInBar">
             <p className="signInText">Sign In</p>
-            <button type="button" className="signInButton">
+            <button type="submit" className="signInButton">
               <ArrowRightIcon fill="#fff" width="34px" height="34px" />
             </button>
           </div>
