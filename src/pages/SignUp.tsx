@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -60,7 +61,7 @@ const SignUp: FC = () => {
 
       navigate('/');
     } catch (error) {
-      console.log(error);
+      toast.error('Something with wrong with the registration');
     }
   };
 
