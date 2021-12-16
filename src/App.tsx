@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Navbar, PrivateRoute } from 'components';
 import {
   Category,
+  CreateListing,
   Explore,
   ForgotPassword,
   Offers,
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/create-listing" element={<CreateListing />} />
         </Routes>
         <Navbar />
       </Router>
