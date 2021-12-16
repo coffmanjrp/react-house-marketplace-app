@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from 'firebase.config';
 import { Spinner } from 'components';
+import { toast } from 'react-toastify';
 
 interface FormDataState {
   type: 'rent' | 'sale';
@@ -23,7 +24,7 @@ interface FormDataState {
   offer: boolean;
   regularPrice: number;
   discountedPrice: number;
-  images: FileList | {} | null;
+  images: FileList | [] | null;
   latitude: number;
   longitude: number;
   userRef?: string;
@@ -43,7 +44,7 @@ const CreateListing: FC = () => {
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
-    images: {},
+    images: [],
     latitude: 0,
     longitude: 0,
   });
@@ -87,7 +88,52 @@ const CreateListing: FC = () => {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+
+    setLoading(true);
+
+    if (discountedPrice >= regularPrice) {
+      setLoading(false);
+      toast.error('Disoundted price needs to be less than regular price');
+      return;
+    }
+
+    if (images!.length > 6) {
+      setLoading(false);
+      toast.error('You can only upload 6 images');
+      return;
+    }
+
+    let geolocation: {
+      lat?: number;
+      lng?: number;
+    } = {};
+    let location;
+
+    if (geolocationEnabled) {
+      const responce = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GOOGLE_GEOLOCATION_API_KEY}`
+      );
+      const data = await responce.json();
+
+      geolocation.lat = data.results[0]?.geometry.lat ?? 0;
+      geolocation.lng = data.results[0]?.geometry.lng ?? 0;
+      location =
+        data.status === 'ZERO_RESULTS'
+          ? undefined
+          : data.results[0]?.formatted_address;
+
+      if (location === undefined || location.includes('undefined')) {
+        setLoading(false);
+        toast.error('Pease enter a corrent address');
+        return;
+      }
+    } else {
+      geolocation.lat = latitude;
+      geolocation.lng = longitude;
+      location = address;
+    }
+
+    setLoading(false);
   };
 
   const onMutate = (e: ChangeEvent | MouseEvent) => {
