@@ -21,7 +21,6 @@ const Listing: FC = () => {
       setLoading(false);
 
       if (docSnapshot.exists()) {
-        console.log(docSnapshot.data());
         setListing(docSnapshot.data());
       }
     };

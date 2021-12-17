@@ -1,4 +1,5 @@
 export { default as Category } from './Category';
+export { default as Contact } from './Contact';
 export { default as CreateListing } from './CreateListing';
 export { default as Explore } from './Explore';
 export { default as ForgotPassword } from './ForgotPassword';

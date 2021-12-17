@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Navbar, PrivateRoute } from 'components';
 import {
   Category,
+  Contact,
   CreateListing,
   Explore,
   ForgotPassword,
@@ -33,6 +34,7 @@ const App = () => {
             path="/category/:categoryName/:listingId"
             element={<Listing />}
           />
+          <Route path="/contact/:landLordId" element={<Contact />} />
         </Routes>
         <Navbar />
       </Router>
