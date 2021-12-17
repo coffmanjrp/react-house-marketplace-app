@@ -901,7 +901,7 @@ button {
 
 .leafletContainer {
   width: 100%;
-  height: 200px;
+  height: 350px;
   overflow-x: hidden;
   margin-bottom: 3rem;
 }
