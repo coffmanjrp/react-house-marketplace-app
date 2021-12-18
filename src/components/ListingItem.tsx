@@ -2,16 +2,18 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { DocumentData } from 'firebase/firestore';
 import { ReactComponent as DeleteIcon } from 'assets/svg/deleteIcon.svg';
+import { ReactComponent as EditIcon } from 'assets/svg/editIcon.svg';
 import bedIcon from 'assets/svg/bedIcon.svg';
 import bathtubIcon from 'assets/svg/bathtubIcon.svg';
 
 interface Props {
   id: string | number;
   listing: DocumentData;
-  onDelete?: (id: string, name: string) => void;
+  onDelete?: (listingId: string) => void;
+  onEdit?: (listingId: string) => void;
 }
 
-const ListingItem: FC<Props> = ({ listing, id, onDelete }) => {
+const ListingItem: FC<Props> = ({ listing, id, onDelete, onEdit }) => {
   return (
     <li className="categoryListing">
       <Link
@@ -57,7 +59,14 @@ const ListingItem: FC<Props> = ({ listing, id, onDelete }) => {
         <DeleteIcon
           className="removeIcon"
           fill="rgb(231, 76, 60)"
-          onClick={() => onDelete(listing.id, listing.name)}
+          onClick={() => onDelete(listing.id)}
+        />
+      )}
+      {onEdit && (
+        <EditIcon
+          className="editIcon"
+          fill="rgb(0, 0, 0)"
+          onClick={() => onEdit(listing.id)}
         />
       )}
     </li>

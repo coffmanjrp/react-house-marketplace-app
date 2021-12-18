@@ -1,6 +1,7 @@
 export { default as Category } from './Category';
 export { default as Contact } from './Contact';
 export { default as CreateListing } from './CreateListing';
+export { default as EditListing } from './EditListing';
 export { default as Explore } from './Explore';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as Listing } from './Listing';

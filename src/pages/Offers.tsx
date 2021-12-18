@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   collection,
@@ -24,7 +23,6 @@ const Offers: FC = () => {
   const [loading, setLoading] = useState(true);
   const [lastFetchedListing, setLastFetchedListing] =
     useState<DocumentData | null>(null);
-  const params = useParams();
 
   useEffect(() => {
     const fetchListings = async () => {

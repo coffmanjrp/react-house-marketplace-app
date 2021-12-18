@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -25,33 +25,43 @@ const Slider: FC = () => {
   const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState<ListingsState[] | null>(null);
   const navigate = useNavigate();
+  const isMounted = useRef(true);
 
+  // sets userRef to loggedin user
   useEffect(() => {
-    const fetchListings = async () => {
-      const listingsRef = collection(db, 'listings');
-      const q = query(listingsRef, orderBy('timestamp', 'desc'), limit(5));
-      const querySnapshot = await getDocs(q);
+    if (isMounted) {
+      const fetchListings = async () => {
+        const listingsRef = collection(db, 'listings');
+        const q = query(listingsRef, orderBy('timestamp', 'desc'), limit(5));
+        const querySnapshot = await getDocs(q);
 
-      const newListings: ListingsState[] = [];
+        const newListings: ListingsState[] = [];
 
-      querySnapshot.forEach((doc) => {
-        return newListings!.push({
-          id: doc.id,
-          data: doc.data(),
+        querySnapshot.forEach((doc) => {
+          return newListings!.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
-      });
 
-      console.log(newListings);
+        setListings(newListings);
+        setLoading(false);
+      };
 
-      setListings(newListings);
-      setLoading(false);
-    };
+      fetchListings();
 
-    fetchListings();
-  }, []);
+      return () => {
+        isMounted.current = false;
+      };
+    }
+  }, [isMounted]);
 
   if (loading) {
     return <Spinner />;
+  }
+
+  if (listings!.length === 0) {
+    return <></>;
   }
 
   return (

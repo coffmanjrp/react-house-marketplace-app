@@ -7,10 +7,16 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  serverTimestamp,
+  DocumentData,
+} from 'firebase/firestore';
 import {
   getStorage,
   ref,
@@ -21,28 +27,11 @@ import { app, db } from 'firebase.config';
 import { Spinner } from 'components';
 import { toast } from 'react-toastify';
 
-interface FormDataState {
-  type: 'rent' | 'sale';
-  name: string;
-  bedrooms: number;
-  bathrooms: number;
-  parking: boolean;
-  furnished: boolean;
-  address?: string;
-  offer: boolean;
-  regularPrice: number;
-  discountedPrice?: number;
-  images?: any;
-  location?: string;
-  latitude: number;
-  longitude: number;
-  userRef?: string;
-}
-
-const CreateListing: FC = () => {
+const EditListing: FC = () => {
   const [geolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FormDataState>({
+  const [listing, setListing] = useState<DocumentData | null>(null);
+  const [formData, setFormData] = useState<DocumentData | null>({
     type: 'rent',
     name: '',
     bedrooms: 1,
@@ -71,12 +60,14 @@ const CreateListing: FC = () => {
     images,
     latitude,
     longitude,
-  } = formData;
+  } = formData!;
+  const params = useParams();
 
   const auth = getAuth(app);
   const navigate = useNavigate();
   const isMounted = useRef(true);
 
+  // sets userRef to loggedin user
   useEffect(() => {
     if (isMounted) {
       onAuthStateChanged(auth, (user) => {
@@ -94,6 +85,39 @@ const CreateListing: FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
+
+  // fetch listing to edit
+  useEffect(() => {
+    setLoading(true);
+    const fetchListing = async () => {
+      const docRef = doc(db, 'listings', params.listingId!);
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        setListing(docSnapshot.data());
+        setFormData({
+          ...docSnapshot.data(),
+          address: docSnapshot.data().location,
+        });
+        setLoading(false);
+      } else {
+        navigate('/listing');
+        toast.error('Listing not found');
+      }
+    };
+
+    fetchListing();
+  }, [navigate, params.listingId]);
+
+  // redirect if listing is not users
+  useEffect(() => {
+    if (listing && listing.userRef !== auth.currentUser!.uid) {
+      toast.error('You can not edit that listing');
+      navigate('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -186,7 +210,7 @@ const CreateListing: FC = () => {
       return;
     });
 
-    const formDataCopy = {
+    const formDataCopy: DocumentData | null = {
       ...formData,
       imageUrls,
       geolocation,
@@ -197,7 +221,8 @@ const CreateListing: FC = () => {
     delete formDataCopy.address;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
 
-    const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
+    const docRef = doc(db, 'listings', params.listingId!);
+    await updateDoc(docRef, formDataCopy);
 
     setLoading(false);
     toast.success('Listing saved');
@@ -239,7 +264,7 @@ const CreateListing: FC = () => {
   return (
     <div className="profile">
       <header className="pageHeader">
-        <p>Create a Listing</p>
+        <p>Edit Listing</p>
       </header>
       <main>
         <form onSubmit={onSubmit}>
@@ -452,7 +477,7 @@ const CreateListing: FC = () => {
             required
           />
           <button type="submit" className="primaryButton createListingButton">
-            Create Listing
+            Edit Listing
           </button>
         </form>
       </main>
@@ -460,4 +485,4 @@ const CreateListing: FC = () => {
   );
 };
 
-export default CreateListing;
+export default EditListing;

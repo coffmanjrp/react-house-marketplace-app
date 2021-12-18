@@ -7,7 +7,7 @@ import { db } from 'firebase.config';
 const Contact: FC = () => {
   const [message, setMessage] = useState('');
   const [landlord, setLandlord] = useState<DocumentData | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const params = useParams();
 
   useEffect(() => {
