@@ -8,7 +8,7 @@ interface Props {
   id: string | number;
   listing: {
     id: string;
-    type: string;
+    type: 'rent' | 'sale';
     imageUrls: string[];
     name: string;
     location: string;
