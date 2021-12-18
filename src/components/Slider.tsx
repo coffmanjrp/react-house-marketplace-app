@@ -32,7 +32,7 @@ const Slider: FC = () => {
       const q = query(listingsRef, orderBy('timestamp', 'desc'), limit(5));
       const querySnapshot = await getDocs(q);
 
-      let newListings: ListingsState[] = [];
+      const newListings: ListingsState[] = [];
 
       querySnapshot.forEach((doc) => {
         return newListings!.push({

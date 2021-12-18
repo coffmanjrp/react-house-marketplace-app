@@ -1,23 +1,13 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { DocumentData } from 'firebase/firestore';
 import { ReactComponent as DeleteIcon } from 'assets/svg/deleteIcon.svg';
 import bedIcon from 'assets/svg/bedIcon.svg';
 import bathtubIcon from 'assets/svg/bathtubIcon.svg';
 
 interface Props {
   id: string | number;
-  listing: {
-    id: string;
-    type: 'rent' | 'sale';
-    imageUrls: string[];
-    name: string;
-    location: string;
-    offer: boolean;
-    discountedPrice: number;
-    regularPrice: number;
-    bedrooms: number;
-    bathrooms: number;
-  };
+  listing: DocumentData;
   onDelete?: (id: string, name: string) => void;
 }
 
